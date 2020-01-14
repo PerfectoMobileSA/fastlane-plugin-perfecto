@@ -1,0 +1,9 @@
+lane :test do
+  perfecto(
+    perfecto_cloudurl: ENV["PERFECTO_CLOUDURL"],
+    perfecto_token: ENV["PERFECTO_TOKEN"],
+    perfecto_media_location: ENV["PERFECTO_MEDIA_LOCATION"],
+    perfecto_media_filename: ENV["PERFECTO_MEDIA_FILENAME"],
+    file_path: ENV["file_path"]
+  )
+end
