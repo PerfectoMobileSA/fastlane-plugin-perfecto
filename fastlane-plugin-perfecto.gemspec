@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.email         = 'support@perfectomobile.com'
 
   spec.summary       = 'This plugin allows you to automatically upload ipa/apk files to Perfecto for manual/automation testing'
-  # spec.homepage      = "https://github.com/PerfectoMobileSA/fastlane-plugin-perfecto"
+  spec.homepage      = "https://github.com/PerfectoMobileSA/fastlane-plugin-perfecto"
   spec.license       = "MIT"
 
   spec.files         = Dir["lib/**/*"] + %w(README.md LICENSE)

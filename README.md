@@ -1,6 +1,7 @@
 # perfecto plugin
 
 [![fastlane Plugin Badge](https://rawcdn.githack.com/fastlane/fastlane/master/fastlane/assets/plugin-badge.svg)](https://rubygems.org/gems/fastlane-plugin-perfecto)
+[![CircleCI](https://circleci.com/gh/PerfectoMobileSA/fastlane-plugin-perfecto/tree/master.svg?style=svg)](https://circleci.com/gh/PerfectoMobileSA/fastlane-plugin-perfecto/tree/master)
 
 ## Getting Started
 
@@ -14,13 +15,64 @@ fastlane add_plugin perfecto
 
 This plugin allows you to automatically upload ipa/apk files to Perfecto for manual/automation testing
 
-**Note to author:** Add a more detailed description about this plugin here. If your plugin contains multiple actions, make sure to mention them here.
 
 ## Example
 
 Check out the [example `Fastfile`](fastlane/Fastfile) to see how to use this plugin. Try it by cloning the repo, running `fastlane install_plugins` and `bundle exec fastlane test`.
+You can easily upload your ipa/apk file using perfecto fastlane Plugin and execute your test on perfecto cloud.
 
-**Note to author:** Please set up a sample project to make it easy for users to explore what your plugin does. Provide everything that is necessary to try out the plugin in this project (including a sample Xcode/Android project if necessary)
+Add the below action in your fastfile to utilize this plugin.  
+
+```
+lane :test do
+  perfecto(
+    perfecto_cloudurl: ENV["PERFECTO_CLOUDURL"],
+    perfecto_token: ENV["PERFECTO_TOKEN"],
+    perfecto_media_location: ENV["PERFECTO_MEDIA_LOCATION"],
+    file_path: ENV['GRADLE_APK_OUTPUT_PATH']
+  )
+end
+```
+### Note: <br>
+Pass the below variable values as environment variables:<br>
+PERFECTO_CLOUDURL  [your perfecto cloud url. E.g.: demo.perfectomobile.com]<br>
+PERFECTO_TOKEN [your perfecto [`security token`](https://developers.perfectomobile.com/display/PD/Generate+security+tokens)]<br>
+PERFECTO_MEDIA_LOCATION	[mention the Perfecto media repository location to upload the file mentioned in file_path. E.g. PUBLIC:Samples/sample.ipa]<br>
+file_path [location of your preferred ipa/apk file which needs to be uploaded to perfecto media repository.]<br>
+slack_webhook [Slack incoming webhook for slack integration. more info: [`here`](https://docs.fastlane.tools/actions/slack/)]<br>
+
+Here's a [`sample project`](https://github.com/PerfectoMobileSA/FastlaneEspressoCircleCISlackSample) which demonstrates the usage of this plugin. 
+
+The following actions are possible with the [`sample project`](https://github.com/PerfectoMobileSA/FastlaneEspressoCircleCISlackSample):
+
+## Available Actions:
+## Android
+### android test
+```
+fastlane android test
+```
+build, upload and run on perfecto
+### android apk
+```
+fastlane android apk
+```
+Build debug APK and upload to perfecto
+### android test_apk
+```
+fastlane android test_apk
+```
+Build debug test APK and upload to perfecto
+### android run_perfecto
+```
+fastlane android run_perfecto
+```
+Run on perfecto
+### android slack_report
+```
+fastlane android slack_report
+```
+Report perfecto url to slack
+
 
 ## Run tests for this plugin
 

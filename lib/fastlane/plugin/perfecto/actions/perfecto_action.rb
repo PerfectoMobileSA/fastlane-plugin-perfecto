@@ -15,14 +15,12 @@ module Fastlane
         perfecto_cloudurl = params[:perfecto_cloudurl]
         perfecto_token = params[:perfecto_token]
         filepath = params[:file_path].to_s
-        perfecto_media_location = params[:perfecto_media_location]
-        perfecto_media_filename = params[:perfecto_media_filename]
+        perfecto_media_fullpath = params[:perfecto_media_location]
 
         # validates the filepath and perfecto media location file
         UI.message("validating filepath")
         validate_filepath(filepath)
         UI.message("validating  media location")
-        perfecto_media_fullpath = perfecto_media_location + "/" + perfecto_media_filename
         validate_repopath(perfecto_media_fullpath)
 
         # uploads the ipa/apk to perfecto media repository
@@ -72,7 +70,7 @@ module Fastlane
         # Validate file extension.
         filepath_parts = perfecto_media_fullpath.split(".")
         unless filepath_parts.length > 1 && SUPPORTED_FILE_EXTENSIONS.include?(filepath_parts.last)
-          UI.user_error!("perfecto_media_filename is invalid, only files with extensions with .ipa or .apk are allowed to be uploaded.")
+          UI.user_error!("perfecto_media_location is invalid, only files with extensions with .ipa or .apk are allowed to be uploaded.")
         end
       end
 
@@ -116,13 +114,6 @@ module Fastlane
                                         verify_block: proc do |value|
                                           UI.user_error!("No perfecto_media_location given.") if value.to_s.empty?
                                         end),
-          FastlaneCore::ConfigItem.new(key: :perfecto_media_filename,
-                                        description: "Perfecto media filename",
-                                        optional: false,
-                                        is_string: true,
-                                        verify_block: proc do |value|
-                                          UI.user_error!("No perfecto_media_filename given.") if value.to_s.empty?
-                                        end),
           FastlaneCore::ConfigItem.new(key: :file_path,
                                        description: "Path to the app file",
                                        optional: true,
@@ -142,7 +133,6 @@ module Fastlane
             perfecto_cloudurl: ENV["PERFECTO_CLOUDURL"],
             perfecto_token: ENV["PERFECTO_TOKEN"],
             perfecto_media_location: ENV["PERFECTO_MEDIA_LOCATION"],
-            perfecto_media_filename: ENV["PERFECTO_MEDIA_FILENAME"],
             file_path: "path_to_apk_or_ipa_file"
            )'
         ]

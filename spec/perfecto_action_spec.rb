@@ -5,8 +5,7 @@ describe Fastlane::Actions::PerfectoAction do
           perfecto({
             perfecto_cloudurl: ENV['PERFECTO_CLOUDURL'],
             perfecto_token: ENV['PERFECTO_TOKEN'],
-            perfecto_media_location: 'PUBLIC:Samples',
-            perfecto_media_filename: 'sample.ipa',
+            perfecto_media_location: 'PUBLIC:Samples/sample.ipa',
             file_path: File.join(SAMPLE_PATH, 'sample.ipa')
           })
         end").runner.execute(:test)
@@ -18,8 +17,7 @@ describe Fastlane::Actions::PerfectoAction do
           perfecto({
             perfecto_cloudurl: ENV['PERFECTO_CLOUDURL'],
             perfecto_token: ENV['PERFECTO_TOKEN'],
-            perfecto_media_location: 'PUBLIC:Samples',
-            perfecto_media_filename: 'sample.apk',
+            perfecto_media_location: 'PUBLIC:Samples/sample.apk',
             file_path: File.join(SAMPLE_PATH, 'app-debug.apk')
           })
         end").runner.execute(:test)
@@ -32,7 +30,6 @@ describe Fastlane::Actions::PerfectoAction do
             perfecto_cloudurl: ENV['PERFECTO_CLOUDURL'],
             perfecto_token: ENV['PERFECTO_TOKEN'],
             perfecto_media_location: ENV['PERFECTO_MEDIA_LOCATION'],
-            perfecto_media_filename: ENV['PERFECTO_MEDIA_FILENAME'],
             file_path: ENV['file_path']
           })
         end").runner.execute(:test)
@@ -46,7 +43,6 @@ describe Fastlane::Actions::PerfectoAction do
             perfecto_cloudurl: ENV['PERFECTO_CLOUDURL'],
             perfecto_token: ENV['PERFECTO_TOKEN'],
             perfecto_media_location: ENV['PERFECTO_MEDIA_LOCATION'],
-            perfecto_media_filename: ENV['PERFECTO_MEDIA_FILENAME'],
             file_path: File.join(SAMPLE_PATH, 'sample.ipa')
           })
         end").runner.execute(:test)
@@ -59,8 +55,7 @@ describe Fastlane::Actions::PerfectoAction do
             perfecto({
               perfecto_cloudurl: ENV['PERFECTO_CLOUDURL'],
               perfecto_token: ENV['PERFECTO_TOKEN'],
-              perfecto_media_location: ENV['PERFECTO_MEDIA_LOCATION'],
-              perfecto_media_filename: ('blue.jpg'),
+              perfecto_media_location: 'PUBLIC:Samples/blue.jpg',
               file_path: File.join(SAMPLE_PATH, 'blue.jpg')
             })
         end").runner.execute(:test)
@@ -74,7 +69,6 @@ describe Fastlane::Actions::PerfectoAction do
               perfecto_cloudurl: ENV['PERFECTO_CLOUDURL'],
               perfecto_token: ENV['PERFECTO_TOKEN'],
               perfecto_media_location: ENV['PERFECTO_MEDIA_LOCATION'],
-              perfecto_media_filename: ENV['PERFECTO_MEDIA_FILENAME'],
               file_path: File.join(SAMPLE_PATH, 'blue')
               })
           end").runner.execute(:test)
@@ -88,7 +82,6 @@ describe Fastlane::Actions::PerfectoAction do
               perfecto_cloudurl: 'invalid',
               perfecto_token: ENV['PERFECTO_TOKEN'],
               perfecto_media_location: ENV['PERFECTO_MEDIA_LOCATION'],
-              perfecto_media_filename: ENV['PERFECTO_MEDIA_FILENAME'],
               file_path: File.join(SAMPLE_PATH, 'sample.ipa')
               })
           end").runner.execute(:test)
@@ -102,7 +95,6 @@ describe Fastlane::Actions::PerfectoAction do
               perfecto_cloudurl: ENV['PERFECTO_CLOUDURL'],
               perfecto_token: 'token',
               perfecto_media_location: ENV['PERFECTO_MEDIA_LOCATION'],
-              perfecto_media_filename: ENV['PERFECTO_MEDIA_FILENAME'],
               file_path: File.join(SAMPLE_PATH, 'sample.ipa')
               })
           end").runner.execute(:test)
@@ -115,12 +107,11 @@ describe Fastlane::Actions::PerfectoAction do
             perfecto({
               perfecto_cloudurl: ENV['PERFECTO_CLOUDURL'],
               perfecto_token: ENV['PERFECTO_TOKEN'],
-              perfecto_media_location: ENV['PERFECTO_MEDIA_LOCATION'],
-              perfecto_media_filename: ('blue.jpg'),
+              perfecto_media_location: ('blue.jpg'),
               file_path: File.join(SAMPLE_PATH, 'sample.ipa')
               })
           end").runner.execute(:test)
-      end.to raise_error('perfecto_media_filename is invalid, only files with extensions with .ipa or .apk are allowed to be uploaded.')
+      end.to raise_error('perfecto_media_location is invalid, only files with extensions with .ipa or .apk are allowed to be uploaded.')
     end
 
     it "raise an error with correct parameters but invalid media location but valid extension" do
@@ -129,8 +120,7 @@ describe Fastlane::Actions::PerfectoAction do
             perfecto({
               perfecto_cloudurl: ENV['PERFECTO_CLOUDURL'],
               perfecto_token: ENV['PERFECTO_TOKEN'],
-            perfecto_media_location: 'TEST:test',
-              perfecto_media_filename: 'blue.ipa',
+              perfecto_media_location: 'TEST:test/blue.ipa',
               file_path: File.join(SAMPLE_PATH, 'sample.ipa')
               })
           end").runner.execute(:test)
@@ -165,19 +155,6 @@ describe Fastlane::Actions::PerfectoAction do
         end").runner.execute(:test)
       end.to raise_error("No perfecto_media_location given.")
     end
-
-    it "raises an error if no perfecto_media_filename is given" do
-      expect do
-        Fastlane::FastFile.new.parse("lane :test do
-          perfecto({
-            perfecto_cloudurl: 'PERFECTO_CLOUDURL',
-            perfecto_token: 'perfecto_token',
-            perfecto_media_location: ENV['PERFECTO_MEDIA_LOCATION'],
-          })
-        end").runner.execute(:test)
-      end.to raise_error("No perfecto_media_filename given.")
-    end
-
     it "raises an error if just perfecto is called" do
       expect do
         Fastlane::FastFile.new.parse("lane :test do
