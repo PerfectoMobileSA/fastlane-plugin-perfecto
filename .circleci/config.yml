@@ -41,3 +41,18 @@ jobs:
       - store_artifacts:
           path: ~/repo/test-results
           destination: test-results
+workflows: 
+  version: 2
+  commit:
+    jobs:
+      - build
+  nightly:
+    triggers:
+      - schedule:
+          cron: "2 0 * * *"
+          filters:
+            branches:
+              only:
+                - master      
+    jobs:
+      - build
