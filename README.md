@@ -35,11 +35,25 @@ end
 ```
 ### Note: <br>
 Pass the below variable values as environment variables:<br>
-PERFECTO_CLOUDURL  [your perfecto cloud url. E.g.: demo.perfectomobile.com]<br>
-PERFECTO_TOKEN [your perfecto [`security token`](https://developers.perfectomobile.com/display/PD/Generate+security+tokens)]<br>
-PERFECTO_MEDIA_LOCATION	[mention the Perfecto media repository location to upload the file mentioned in file_path. E.g. PUBLIC:Samples/sample.ipa]<br>
-file_path [location of your preferred ipa/apk file which needs to be uploaded to perfecto media repository.]<br>
-slack_webhook [Slack incoming webhook for slack integration. more info: [`here`](https://docs.fastlane.tools/actions/slack/)]<br>
+&nbsp;  * PERFECTO_CLOUDURL  [your perfecto cloud url. E.g.: demo.perfectomobile.com]<br>
+&nbsp;	* PERFECTO_TOKEN [your perfecto [`security token`](https://developers.perfectomobile.com/display/PD/Generate+security+tokens)]<br>
+&nbsp;	* PERFECTO_MEDIA_LOCATION	[mention the Perfecto media repository location to upload the file mentioned in file_path. E.g. PUBLIC:Samples/sample.ipa]<br>
+&nbsp;	* file_path [location of your preferred ipa/apk file which needs to be uploaded to perfecto media repository.]<br>
+
+## Run tests for this plugin
+
+To run both the tests, and code style validation, run
+
+```
+rake
+```
+
+To automatically fix many of the styling issues, use
+```
+rubocop -a
+```
+
+## Sample project: <br>
 
 Here's a [`sample project`](https://github.com/PerfectoMobileSA/FastlaneEspressoCircleCISlackSample) which demonstrates the usage of this plugin. 
 
@@ -72,20 +86,6 @@ Run on perfecto
 fastlane android slack_report
 ```
 Report perfecto url to slack
-
-
-## Run tests for this plugin
-
-To run both the tests, and code style validation, run
-
-```
-rake
-```
-
-To automatically fix many of the styling issues, use
-```
-rubocop -a
-```
 
 ## Issues and Feedback
 

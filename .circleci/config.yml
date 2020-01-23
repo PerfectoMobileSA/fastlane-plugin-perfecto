@@ -37,9 +37,9 @@ jobs:
 
       # collect reports
       - store_test_results:
-          path: ~/repo/test-results
+          path: ~/test-results
       - store_artifacts:
-          path: ~/repo/test-results
+          path: ~/test-results
           destination: test-results
 workflows: 
   version: 2
