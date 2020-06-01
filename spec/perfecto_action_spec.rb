@@ -85,7 +85,7 @@ describe Fastlane::Actions::PerfectoAction do
               file_path: File.join(SAMPLE_PATH, 'sample.ipa')
               })
           end").runner.execute(:test)
-      end.to raise_error('App upload failed!!! Reason : Failed to open TCP connection to invalid:443 (getaddrinfo: No address associated with hostname)')
+      end.to raise_error('App upload failed!!! Reason : Failed to open TCP connection to invalid:443 (getaddrinfo: nodename nor servname provided, or not known)')
     end
  
     it "raise an error with correct parameters but invalid token" do
