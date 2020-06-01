@@ -112,7 +112,7 @@ module Fastlane
                                        optional: false,
                                        is_string: true,
                                        verify_block: proc do |value|
-                                        UI.user_error!("No perfecto_media_location given.") if value.to_s.empty?
+                                         UI.user_error!("No perfecto_media_location given.") if value.to_s.empty?
                                        end),
           FastlaneCore::ConfigItem.new(key: :file_path,
                                        description: "Path to the app file",
