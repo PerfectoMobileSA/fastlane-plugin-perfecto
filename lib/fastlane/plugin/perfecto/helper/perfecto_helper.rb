@@ -18,15 +18,24 @@ module Fastlane
         unless ENV['http_proxy']
           RestClient.proxy = ENV['http_proxy']
         end
+        uri = URI.parse(perfecto_cloudurl)
         response = RestClient::Request.execute(
-          url: 'https://' + perfecto_cloudurl + '/services/repositories/media/' + perfecto_media_fullpath + '?operation=upload&overwrite=true&securityToken=' + URI.encode(perfecto_token, "UTF-8"),
+          url: 'https://' + uri.host + '/repository/api/v1/artifacts',
           method: :post,
           headers: {
             'Accept' => 'application/json',
-            'Content-Type' => 'application/octet-stream',
-            'Expect' => '100-continue'
+            'Content-Type' => 'multipart/form-data',
+            'PERFECTO_AUTHORIZATION' => perfecto_token
           },
-          payload: File.open(file_path, "rb")
+          payload: {
+            multipart: true,
+            inputStream: File.open(file_path, "rb"),
+            requestPart: {
+              artifactLocator: "PUBLIC:BUILDS/EMS/EMS_QA/app-release.qa.apk",
+              artifactType: "ANDROID",
+              override: true
+            }.to_json
+          }
         )
         UI.message(response.inspect)
       rescue RestClient::ExceptionWithResponse => err
