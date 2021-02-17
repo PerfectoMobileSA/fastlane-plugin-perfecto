@@ -31,8 +31,7 @@ module Fastlane
             multipart: true,
             inputStream: File.open(file_path, "rb"),
             requestPart: {
-              artifactLocator: "PUBLIC:BUILDS/EMS/EMS_QA/app-release.qa.apk",
-              artifactType: "ANDROID",
+              artifactLocator: perfecto_media_fullpath,
               override: true
             }.to_json
           }
