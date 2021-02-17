@@ -16,6 +16,7 @@ module Fastlane
         perfecto_token = params[:perfecto_token]
         filepath = params[:file_path].to_s
         perfecto_media_fullpath = params[:perfecto_media_location]
+        perfecto_artifact_type = params[:perfecto_artifact_type]
 
         # validates the filepath and perfecto media location file
         UI.message("validating filepath")
@@ -25,7 +26,7 @@ module Fastlane
 
         # uploads the ipa/apk to perfecto media repository
         UI.message("Attempting to upload: " + filepath + " to Perfecto!")
-        Helper::PerfectoHelper.upload_file(perfecto_cloudurl, perfecto_token, filepath, perfecto_media_fullpath)
+        Helper::PerfectoHelper.upload_file(perfecto_cloudurl, perfecto_token, filepath, perfecto_media_fullpath, perfecto_artifact_type)
         UI.success("The File in: " + filepath + " is successfully uploaded to Perfecto media location : " + perfecto_media_fullpath)
 
         # Setting the environment variable: PERFECTO_MEDIA_FULLPATH with the perfecto media repository location.
@@ -118,7 +119,12 @@ module Fastlane
                                        description: "Path to the app file",
                                        optional: true,
                                        is_string: true,
-                                       default_value: default_file_path)
+                                       default_value: default_file_path),
+          FastlaneCore::ConfigItem.new(key: :perfecto_artifact_type,
+                                       description: "Type of the artifact (GENERAL, IOS, SIMULATOR, ANDROID, IMAGE, AUDIO, VIDEO, SCRIPT)",
+                                       optional: true,
+                                       is_string: true,
+                                       default_value: "")
         ]
       end
 
@@ -133,7 +139,8 @@ module Fastlane
             perfecto_cloudurl: ENV["PERFECTO_CLOUDURL"],
             perfecto_token: ENV["PERFECTO_TOKEN"],
             perfecto_media_location: ENV["PERFECTO_MEDIA_LOCATION"],
-            file_path: "path_to_apk_or_ipa_file"
+            file_path: "path_to_apk_or_ipa_file",
+            perfecto_artifact_type: "ANDROID"
            )'
         ]
       end

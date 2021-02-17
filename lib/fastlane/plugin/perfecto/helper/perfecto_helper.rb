@@ -14,7 +14,8 @@ module Fastlane
       # +perfecto_token+:: Perfecto's security token.
       # +file_path+:: Path to the file to be uploaded.
       # +perfecto_media_fullpath+:: Path to the perfecto media location
-      def self.upload_file(perfecto_cloudurl, perfecto_token, file_path, perfecto_media_fullpath)
+      # +perfecto_artifact_type+:: GENERAL, IOS, SIMULATOR, ANDROID, IMAGE, AUDIO, VIDEO, SCRIPT
+      def self.upload_file(perfecto_cloudurl, perfecto_token, file_path, perfecto_media_fullpath, perfecto_artifact_type)
         unless ENV['http_proxy']
           RestClient.proxy = ENV['http_proxy']
         end
@@ -32,6 +33,7 @@ module Fastlane
             inputStream: File.open(file_path, "rb"),
             requestPart: {
               artifactLocator: perfecto_media_fullpath,
+              artifactType: perfecto_artifact_type,
               override: true
             }.to_json
           }
