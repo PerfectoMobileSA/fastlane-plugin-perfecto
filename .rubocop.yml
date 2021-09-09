@@ -79,6 +79,9 @@ Metrics/CyclomaticComplexity:
   Enabled: false
 Style/WordArray:
   MinSize: 19
+Style/TrailingCommaInArguments:
+  Enabled: true
+  EnforcedStyle: comma
 Style/SignalException:
   Enabled: false
 Style/RedundantReturn:

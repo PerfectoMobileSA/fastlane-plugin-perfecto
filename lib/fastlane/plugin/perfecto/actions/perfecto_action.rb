@@ -15,8 +15,8 @@ module Fastlane
         perfecto_token = params[:perfecto_token]
         filepath = params[:file_path].to_s
         perfecto_media_fullpath = params[:perfecto_media_location]
-        artifactType = params[:artifactType] || ""
-        artifactName = params[:artifactName] || ""
+        artifact_type = params[:artifactType] || ""
+        artifact_nme = params[:artifactName] || ""
 
         # validates the filepath and perfecto media location file
         UI.message("validating filepath")
@@ -26,7 +26,7 @@ module Fastlane
         # uploads the ipa/apk to perfecto media repository
         UI.message("Attempting to upload: " + filepath + " to Perfecto!")
         # Helper::PerfectoHelper.upload_file(perfecto_cloudurl, perfecto_token, filepath, perfecto_media_fullpath)
-        Helper::PerfectoHelper.uploadV1(perfecto_cloudurl, perfecto_token, filepath, perfecto_media_fullpath, artifactType, artifactName)
+        Helper::PerfectoHelper.upload_v1(perfecto_cloudurl, perfecto_token, filepath, perfecto_media_fullpath, artifact_type, artifact_nme)
         UI.success("The File in: " + filepath + " is successfully uploaded to Perfecto media location : " + perfecto_media_fullpath)
 
         # Setting the environment variable: PERFECTO_MEDIA_FULLPATH with the perfecto media repository location.
@@ -62,7 +62,7 @@ module Fastlane
 
       def self.output
         [
-          ["perfecto_media_fullpath", "Perfecto media repo location"],
+          ["perfecto_media_fullpath", "Perfecto media repo location"]
         ]
       end
 
@@ -114,7 +114,7 @@ module Fastlane
                                        description: "Path to the app file",
                                        optional: true,
                                        is_string: true,
-                                       default_value: default_file_path),
+                                       default_value: default_file_path)
         ]
       end
 
@@ -132,7 +132,7 @@ module Fastlane
             file_path: "path_to_apk_or_ipa_file",
             artifactType: ENV["artifactType"],
             artifactName: ENV["artifactName"]
-           )',
+           )'
         ]
       end
     end

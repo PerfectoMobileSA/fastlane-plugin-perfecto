@@ -5,6 +5,6 @@ lane :test do
     perfecto_media_location: ENV["PERFECTO_MEDIA_LOCATION"],
     file_path: ENV["file_path"],
     artifactType: ENV["artifactType"],
-    artifactName: ENV["artifactName"],
+    artifactName: ENV["artifactName"]
   )
 end

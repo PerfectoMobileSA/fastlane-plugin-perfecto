@@ -26,9 +26,9 @@ module Fastlane
           headers: {
             "Accept" => "application/json",
             "Content-Type" => "application/octet-stream",
-            "Expect" => "100-continue",
+            "Expect" => "100-continue"
           },
-          payload: File.open(file_path, "rb"),
+          payload: File.open(file_path, "rb")
         )
         UI.message(response.inspect)
       rescue RestClient::ExceptionWithResponse => err
@@ -43,9 +43,9 @@ module Fastlane
         UI.user_error!("App upload failed!!! Reason : #{error.message}")
       end
 
-      def self.parameters(requestPart, key, value)
+      def self.parameters(request_part, key, value)
         unless value.to_s.strip.empty?
-          return requestPart.merge!({ key => value })
+          return request_part.merge!(key => value)
         end
       end
 
@@ -55,13 +55,13 @@ module Fastlane
       # +perfecto_token+:: Perfecto's security token.
       # +file_path+:: Path to the file to be uploaded.
       # +perfecto_media_fullpath+:: Path to the perfecto media location
-      # +artifactType+:: Artifact Type
-      # +artifactName+:: Artifact Name
-      def self.uploadV1(perfecto_cloudurl, perfecto_token, file_path, perfecto_media_fullpath, artifactType, artifactName)
+      # +artifact_type+:: Artifact Type
+      # +artifact_name+:: Artifact Name
+      def self.upload_v1(perfecto_cloudurl, perfecto_token, file_path, perfecto_media_fullpath, artifact_type, artifact_name)
         # prepare cloud url
-        unless !perfecto_cloudurl.include? ".perfectomobile.com"
+        if perfecto_cloudurl.include?(".perfectomobile.com")
           perfecto_cloudurl = perfecto_cloudurl.split(".perfectomobile.com")[0]
-          unless !perfecto_cloudurl.include? ".app"
+          if perfecto_cloudurl.include?(".app")
             perfecto_cloudurl = perfecto_cloudurl.split(".app")[0]
           end
         end
@@ -71,13 +71,13 @@ module Fastlane
         https.use_ssl = true
         request = Net::HTTP::Post.new(url)
         request["Perfecto-Authorization"] = perfecto_token
-        requestPart = { "artifactLocator" => perfecto_media_fullpath, "override" => true }
-        parameters(requestPart, "artifactType", artifactType)
-        parameters(requestPart, "artifactName", artifactName)
-        requestPart = requestPart.to_json.to_s.gsub("=>", ":")
-        # Debug: puts requestPart
-        form_data = [["requestPart", requestPart], ["inputStream", File.open(file_path, "rb")]]
-        request.set_form form_data, "multipart/form-data"
+        request_part = { "artifactLocator" => perfecto_media_fullpath, "override" => true }
+        parameters(request_part, "artifactType", artifact_type)
+        parameters(request_part, "artifactName", artifact_name)
+        request_part = request_part.to_json.to_s.gsub("=>", ":")
+        # Debug: puts request_part
+        form_data = [["requestPart", request_part], ["inputStream", File.open(file_path, "rb")]]
+        request.set_form(form_data, "multipart/form-data")
         response = https.request(request)
         UI.message(response.inspect)
         if response.code != "200"
