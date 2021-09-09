@@ -102,7 +102,7 @@ describe Fastlane::Actions::PerfectoAction do
             file_path: File.join(SAMPLE_PATH, 'sample.ipa')
           })
         end").runner.execute(:test)
-      end.to raise_error(/.*nodename nor servname provided.*/)
+      end.to raise_error(/.*nodename nor servname provided.*|.*Name or service not known.*/)
     end
     it "raise an error with correct parameters but no file_path extension" do
       expect do
@@ -127,7 +127,7 @@ describe Fastlane::Actions::PerfectoAction do
               file_path: File.join(SAMPLE_PATH, 'sample.ipa')
               })
           end").runner.execute(:test)
-      end.to raise_error(/.*nodename nor servname provided.*/)
+      end.to raise_error(/.*nodename nor servname provided.*|.*Name or service not known.*/)
     end
 
     it "raise an error with correct parameters but invalid token" do
@@ -140,7 +140,7 @@ describe Fastlane::Actions::PerfectoAction do
               file_path: File.join(SAMPLE_PATH, 'sample.ipa')
               })
           end").runner.execute(:test)
-      end.to raise_error(/.*nodename nor servname provided.*/)
+      end.to raise_error(/.*nodename nor servname provided.*|.*Name or service not known.*/)
     end
 
     # it "raise an error with correct parameters but invalid media location & invalid extension" do
@@ -166,7 +166,7 @@ describe Fastlane::Actions::PerfectoAction do
               file_path: File.join(SAMPLE_PATH, 'sample.ipa')
               })
           end").runner.execute(:test)
-      end.to raise_error(/.*nodename nor servname provided.*/)
+      end.to raise_error(/.*nodename nor servname provided.*|.*Name or service not known.*/)
     end
 
     it "raises an error if PERFECTO_CLOUDURL is not provided" do
