@@ -1,37 +1,38 @@
-require 'fastlane/action'
-require_relative '../helper/perfecto_helper'
-require 'json'
+require "fastlane/action"
+require_relative "../helper/perfecto_helper"
+require "json"
 
 module Fastlane
   module Actions
     module SharedValues
       PERFECTO_MEDIA_FULLPATH ||= :PERFECTO_MEDIA_FULLPATH
     end
-    class PerfectoAction < Action
-      SUPPORTED_FILE_EXTENSIONS = ["ipa", "apk"]
 
+    class PerfectoAction < Action
       def self.run(params)
         # Mandatory parameters
         perfecto_cloudurl = params[:perfecto_cloudurl]
         perfecto_token = params[:perfecto_token]
         filepath = params[:file_path].to_s
         perfecto_media_fullpath = params[:perfecto_media_location]
+        artifactType = params[:artifactType] || ""
+        artifactName = params[:artifactName] || ""
 
         # validates the filepath and perfecto media location file
         UI.message("validating filepath")
         validate_filepath(filepath)
-        UI.message("validating  media location")
-        validate_repopath(perfecto_media_fullpath)
+        UI.message("validating media location")
 
         # uploads the ipa/apk to perfecto media repository
         UI.message("Attempting to upload: " + filepath + " to Perfecto!")
-        Helper::PerfectoHelper.upload_file(perfecto_cloudurl, perfecto_token, filepath, perfecto_media_fullpath)
+        # Helper::PerfectoHelper.upload_file(perfecto_cloudurl, perfecto_token, filepath, perfecto_media_fullpath)
+        Helper::PerfectoHelper.uploadV1(perfecto_cloudurl, perfecto_token, filepath, perfecto_media_fullpath, artifactType, artifactName)
         UI.success("The File in: " + filepath + " is successfully uploaded to Perfecto media location : " + perfecto_media_fullpath)
 
         # Setting the environment variable: PERFECTO_MEDIA_FULLPATH with the perfecto media repository location.
-        ENV['PERFECTO_MEDIA_FULLPATH'] = nil
-        ENV['PERFECTO_MEDIA_FULLPATH'] = perfecto_media_fullpath
-        UI.success("Setting Environment variable PERFECTO_MEDIA_FULLPATH = " + ENV['PERFECTO_MEDIA_FULLPATH'])
+        ENV["PERFECTO_MEDIA_FULLPATH"] = nil
+        ENV["PERFECTO_MEDIA_FULLPATH"] = perfecto_media_fullpath
+        UI.success("Setting Environment variable PERFECTO_MEDIA_FULLPATH = " + ENV["PERFECTO_MEDIA_FULLPATH"])
 
         # Setting the media fullpath in shared values post successful upload in order to be used by other fastlane actions.
         Actions.lane_context[SharedValues::PERFECTO_MEDIA_FULLPATH] = perfecto_media_fullpath
@@ -57,26 +58,11 @@ module Fastlane
       # Validate filepath.
       def self.validate_filepath(filepath)
         UI.user_error!("No file found at filepath parameter location.") unless File.exist?(filepath)
-
-        # Validate file extension.
-        filepath_parts = filepath.split(".")
-        unless filepath_parts.length > 1 && SUPPORTED_FILE_EXTENSIONS.include?(filepath_parts.last)
-          UI.user_error!("filepath is invalid, only files with extensions with .ipa or .apk are allowed to be uploaded.")
-        end
-      end
-
-      # Validate media repo path.
-      def self.validate_repopath(perfecto_media_fullpath)
-        # Validate file extension.
-        filepath_parts = perfecto_media_fullpath.split(".")
-        unless filepath_parts.length > 1 && SUPPORTED_FILE_EXTENSIONS.include?(filepath_parts.last)
-          UI.user_error!("perfecto_media_location is invalid, only files with extensions with .ipa or .apk are allowed to be uploaded.")
-        end
       end
 
       def self.output
         [
-          ['perfecto_media_fullpath', 'Perfecto media repo location']
+          ["perfecto_media_fullpath", "Perfecto media repo location"],
         ]
       end
 
@@ -114,11 +100,21 @@ module Fastlane
                                        verify_block: proc do |value|
                                          UI.user_error!("No perfecto_media_location given.") if value.to_s.empty?
                                        end),
+          FastlaneCore::ConfigItem.new(key: :artifactType,
+                                       description: "Optional, Artifact types: GENERAL, IOS, SIMULATOR, ANDROID, IMAGE, AUDIO, VIDEO, SCRIPT",
+                                       optional: true,
+                                       default_value: "",
+                                       is_string: true),
+          FastlaneCore::ConfigItem.new(key: :artifactName,
+                                       description: "Optional, Used for the representation of the artifact when downloaded",
+                                       optional: true,
+                                       default_value: "",
+                                       is_string: true),
           FastlaneCore::ConfigItem.new(key: :file_path,
                                        description: "Path to the app file",
                                        optional: true,
                                        is_string: true,
-                                       default_value: default_file_path)
+                                       default_value: default_file_path),
         ]
       end
 
@@ -128,13 +124,15 @@ module Fastlane
 
       def self.example_code
         [
-          'perfecto',
+          "perfecto",
           'perfecto(
             perfecto_cloudurl: ENV["PERFECTO_CLOUDURL"],
             perfecto_token: ENV["PERFECTO_TOKEN"],
             perfecto_media_location: ENV["PERFECTO_MEDIA_LOCATION"],
-            file_path: "path_to_apk_or_ipa_file"
-           )'
+            file_path: "path_to_apk_or_ipa_file",
+            artifactType: ENV["artifactType"],
+            artifactName: ENV["artifactName"]
+           )',
         ]
       end
     end

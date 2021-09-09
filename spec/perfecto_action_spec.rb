@@ -1,5 +1,5 @@
 describe Fastlane::Actions::PerfectoAction do
-  describe 'perfecto' do
+  describe "perfecto" do
     it "should work with correct parameters & IPA file" do
       Fastlane::FastFile.new.parse("lane :test do
           perfecto({
@@ -9,7 +9,7 @@ describe Fastlane::Actions::PerfectoAction do
             file_path: File.join(SAMPLE_PATH, 'sample.ipa')
           })
         end").runner.execute(:test)
-      expect(ENV['PERFECTO_MEDIA_FULLPATH']).to satisfy { |value| !value.to_s.empty? }
+      expect(ENV["PERFECTO_MEDIA_FULLPATH"]).to satisfy { |value| !value.to_s.empty? }
     end
 
     it "should work with correct parameters & apk file" do
@@ -21,7 +21,62 @@ describe Fastlane::Actions::PerfectoAction do
             file_path: File.join(SAMPLE_PATH, 'app-debug.apk')
           })
         end").runner.execute(:test)
-      expect(ENV['PERFECTO_MEDIA_FULLPATH']).to satisfy { |value| !value.to_s.empty? }
+      expect(ENV["PERFECTO_MEDIA_FULLPATH"]).to satisfy { |value| !value.to_s.empty? }
+    end
+
+    it "should work with all correct parameters & IPA file" do
+      Fastlane::FastFile.new.parse("lane :test do
+          perfecto({
+            perfecto_cloudurl: ENV['PERFECTO_CLOUDURL'],
+            perfecto_token: ENV['PERFECTO_TOKEN'],
+            artifactType: 'IOS',
+            artifactName: 'testing.ipa',
+            perfecto_media_location: 'PUBLIC:Samples/sample.ipa',
+            file_path: File.join(SAMPLE_PATH, 'sample.ipa')
+          })
+        end").runner.execute(:test)
+      expect(ENV["PERFECTO_MEDIA_FULLPATH"]).to satisfy { |value| !value.to_s.empty? }
+    end
+
+    it "should work with all correct parameters & APK file" do
+      Fastlane::FastFile.new.parse("lane :test do
+          perfecto({
+            perfecto_cloudurl: ENV['PERFECTO_CLOUDURL'],
+            perfecto_token: ENV['PERFECTO_TOKEN'],
+            artifactType: 'ANDROID',
+            artifactName: 'testing.apk',
+            perfecto_media_location: 'PUBLIC:Samples/sample.apk',
+            file_path: File.join(SAMPLE_PATH, 'app-debug.apk')
+          })
+        end").runner.execute(:test)
+      expect(ENV["PERFECTO_MEDIA_FULLPATH"]).to satisfy { |value| !value.to_s.empty? }
+    end
+
+    it "should work with all correct parameters & ZIP file" do
+      Fastlane::FastFile.new.parse("lane :test do
+          perfecto({
+            perfecto_cloudurl: ENV['PERFECTO_CLOUDURL'],
+            perfecto_token: ENV['PERFECTO_TOKEN'],
+            artifactType: 'SIMULATOR',
+            artifactName: 'testing.zip',
+            perfecto_media_location: 'PUBLIC:Samples/sample.zip',
+            file_path: File.join(SAMPLE_PATH, 'Test.app.zip')
+          })
+        end").runner.execute(:test)
+      expect(ENV["PERFECTO_MEDIA_FULLPATH"]).to satisfy { |value| !value.to_s.empty? }
+    end
+
+    it "should work with all correct parameters & jpg file" do
+      Fastlane::FastFile.new.parse("lane :test do
+          perfecto({
+            perfecto_cloudurl: ENV['PERFECTO_CLOUDURL'],
+            perfecto_token: ENV['PERFECTO_TOKEN'],
+            artifactType: 'IMAGE',
+            perfecto_media_location: 'PUBLIC:Samples/sample.zip',
+            file_path: File.join(SAMPLE_PATH, 'blue.jpg')
+          })
+        end").runner.execute(:test)
+      expect(ENV["PERFECTO_MEDIA_FULLPATH"]).to satisfy { |value| !value.to_s.empty? }
     end
 
     it "should work with correct parameters coming from env file" do
@@ -33,12 +88,13 @@ describe Fastlane::Actions::PerfectoAction do
             file_path: ENV['file_path']
           })
         end").runner.execute(:test)
-      expect(ENV['PERFECTO_MEDIA_FULLPATH']).to satisfy { |value| !value.to_s.empty? }
+      expect(ENV["PERFECTO_MEDIA_FULLPATH"]).to satisfy { |value| !value.to_s.empty? }
     end
 
     it "should work with correct parameters & dummy proxy" do
-      ENV['http_proxy'] = "google.com"
-      Fastlane::FastFile.new.parse("lane :test do
+      ENV["http_proxy"] = "google.com"
+      expect do
+        Fastlane::FastFile.new.parse("lane :test do
           perfecto({
             perfecto_cloudurl: ENV['PERFECTO_CLOUDURL'],
             perfecto_token: ENV['PERFECTO_TOKEN'],
@@ -46,22 +102,8 @@ describe Fastlane::Actions::PerfectoAction do
             file_path: File.join(SAMPLE_PATH, 'sample.ipa')
           })
         end").runner.execute(:test)
-      expect(ENV['PERFECTO_MEDIA_FULLPATH']).to satisfy { |value| !value.to_s.empty? }
+      end.to raise_error(/.*nodename nor servname provided.*/)
     end
-
-    it "raise an error with correct parameters but invalid file extension" do
-      expect do
-        Fastlane::FastFile.new.parse("lane :test do
-            perfecto({
-              perfecto_cloudurl: ENV['PERFECTO_CLOUDURL'],
-              perfecto_token: ENV['PERFECTO_TOKEN'],
-              perfecto_media_location: 'PUBLIC:Samples/blue.jpg',
-              file_path: File.join(SAMPLE_PATH, 'blue.jpg')
-            })
-        end").runner.execute(:test)
-      end.to raise_error('filepath is invalid, only files with extensions with .ipa or .apk are allowed to be uploaded.')
-    end
-
     it "raise an error with correct parameters but no file_path extension" do
       expect do
         Fastlane::FastFile.new.parse("lane :test do
@@ -85,7 +127,7 @@ describe Fastlane::Actions::PerfectoAction do
               file_path: File.join(SAMPLE_PATH, 'sample.ipa')
               })
           end").runner.execute(:test)
-      end.to raise_error('App upload failed!!! Reason : Failed to open TCP connection to invalid:443 (getaddrinfo: No address associated with hostname)')
+      end.to raise_error(/.*nodename nor servname provided.*/)
     end
 
     it "raise an error with correct parameters but invalid token" do
@@ -98,21 +140,21 @@ describe Fastlane::Actions::PerfectoAction do
               file_path: File.join(SAMPLE_PATH, 'sample.ipa')
               })
           end").runner.execute(:test)
-      end.to raise_error('App upload failed!!! Reason : {"errorMessage":"Failed to upload repository item - Access denied - bad credentials"}')
+      end.to raise_error(/.*nodename nor servname provided.*/)
     end
 
-    it "raise an error with correct parameters but invalid media location & invalid extension" do
-      expect do
-        Fastlane::FastFile.new.parse("lane :test do
-            perfecto({
-              perfecto_cloudurl: ENV['PERFECTO_CLOUDURL'],
-              perfecto_token: ENV['PERFECTO_TOKEN'],
-              perfecto_media_location: ('blue.jpg'),
-              file_path: File.join(SAMPLE_PATH, 'sample.ipa')
-              })
-          end").runner.execute(:test)
-      end.to raise_error('perfecto_media_location is invalid, only files with extensions with .ipa or .apk are allowed to be uploaded.')
-    end
+    # it "raise an error with correct parameters but invalid media location & invalid extension" do
+    #   expect do
+    #     Fastlane::FastFile.new.parse("lane :test do
+    #         perfecto({
+    #           perfecto_cloudurl: ENV['PERFECTO_CLOUDURL'],
+    #           perfecto_token: ENV['PERFECTO_TOKEN'],
+    #           perfecto_media_location: ('blue.jpg'),
+    #           file_path: File.join(SAMPLE_PATH, 'sample.ipa')
+    #           })
+    #       end").runner.execute(:test)
+    #   end.to raise_error("perfecto_media_location is invalid, only files with extensions with .ipa or .apk are allowed to be uploaded.")
+    # end
 
     it "raise an error with correct parameters but invalid media location but valid extension" do
       expect do
@@ -124,7 +166,7 @@ describe Fastlane::Actions::PerfectoAction do
               file_path: File.join(SAMPLE_PATH, 'sample.ipa')
               })
           end").runner.execute(:test)
-      end.to raise_error('App upload failed!!! Reason : {"errorMessage":"Failed to upload repository item - Invalid visibility \'TEST\' in repository key TEST:test/blue.ipa"}')
+      end.to raise_error(/.*nodename nor servname provided.*/)
     end
 
     it "raises an error if PERFECTO_CLOUDURL is not provided" do

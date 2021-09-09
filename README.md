@@ -11,9 +11,12 @@ This project is a [_fastlane_](https://github.com/fastlane/fastlane) plugin. To 
 fastlane add_plugin perfecto
 ```
 
-## About perfecto
+## About plugin
 
 This plugin allows you to automatically upload ipa/apk files to Perfecto for manual/automation testing
+
+## Updates
+This plugin uses latest v1 upload media API under the hood and supports all file types.
 
 
 ## Example
@@ -33,12 +36,22 @@ lane :test do
   )
 end
 ```
+
+Optional parameters:
+
+```
+    artifactType: ENV["artifactType"],
+    artifactName: ENV["artifactName"],
+```
+
 ### Note: <br>
 Pass the below variable values as environment variables:<br>
 &nbsp;  * PERFECTO_CLOUDURL  [your perfecto cloud url. E.g.: demo.perfectomobile.com]<br>
 &nbsp;	* PERFECTO_TOKEN [your perfecto [`security token`](https://developers.perfectomobile.com/display/PD/Generate+security+tokens)]<br>
 &nbsp;	* PERFECTO_MEDIA_LOCATION	[mention the Perfecto media repository location to upload the file mentioned in file_path. E.g. PUBLIC:Samples/sample.ipa]<br>
 &nbsp;	* file_path [location of your preferred ipa/apk file which needs to be uploaded to perfecto media repository.]<br>
+&nbsp; * artifactType  [Optional: Defines the artifact types, options: GENERAL, IOS, SIMULATOR, ANDROID, IMAGE, AUDIO, VIDEO, SCRIPT]<br>
+&nbsp; * artifactName  [Optional: Used for the representation of the artifact when downloaded.]<br>
 
 ## Run tests for this plugin
 

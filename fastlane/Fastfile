@@ -3,6 +3,8 @@ lane :test do
     perfecto_cloudurl: ENV["PERFECTO_CLOUDURL"],
     perfecto_token: ENV["PERFECTO_TOKEN"],
     perfecto_media_location: ENV["PERFECTO_MEDIA_LOCATION"],
-    file_path: ENV["file_path"]
+    file_path: ENV["file_path"],
+    artifactType: ENV["artifactType"],
+    artifactName: ENV["artifactName"],
   )
 end
