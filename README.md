@@ -3,6 +3,7 @@
 [![fastlane Plugin Badge](https://rawcdn.githack.com/fastlane/fastlane/master/fastlane/assets/plugin-badge.svg)](https://rubygems.org/gems/fastlane-plugin-perfecto)
 [![CircleCI](https://circleci.com/gh/PerfectoMobileSA/fastlane-plugin-perfecto/tree/master.svg?style=svg)](https://circleci.com/gh/PerfectoMobileSA/fastlane-plugin-perfecto/tree/master)
 
+
 ## Getting Started
 
 This project is a [_fastlane_](https://github.com/fastlane/fastlane) plugin. To get started with `fastlane-plugin-perfecto`, add it to your project by running:
@@ -16,7 +17,7 @@ fastlane add_plugin perfecto
 This plugin allows you to automatically upload ipa/apk files to Perfecto for manual/automation testing
 
 ## Updates
-This plugin uses latest v1 upload media API under the hood and supports all file types.
+This plugin uses [latest v1 upload media API](https://help.perfecto.io/perfecto-help/content/perfecto/automation-testing/upload_item_to_repository.htm) under the hood and supports all file types.
 
 
 ## Example
